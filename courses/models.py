@@ -3,6 +3,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+from .fields import OrderField
+
 # Create your models here.
 
 class Subject(models.Model):
@@ -38,14 +40,16 @@ class Course(models.Model):
 class Module(models.Model):
     course = models.ForeignKey(Course, related_name='modules', on_delete=models.CASCADE, verbose_name="курс")
     title = models.CharField(max_length=500, verbose_name="Назва")
-    description = models.TextField(blank=True) 
+    description = models.TextField(blank=True)
+    order = OrderField(blank=True, for_fields=['course']) 
 
     class Meta:
         verbose_name = "Тема"
         verbose_name_plural = "Теми"
+        ordering = ['order']
 
     def __str__(self):
-        return self.title
+        return f'{self.order} {self.title}'
     
 
 class Content(models.Model):
@@ -60,6 +64,12 @@ class Content(models.Model):
                                      )})
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey('content_type', 'object_id')
+    order = OrderField(blank=True, for_fields=['module'])
+
+    class Meta:
+        verbose_name = "Контент"
+        verbose_name_plural = "Контент"
+        ordering = ['order']
 
 
 class ItemBase(models.Model):
