@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Вихід з сайту
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-4">
+      <h2>Вихід з сайту</h2>
+      <p>
+        Ви успішно вийшли з сайту. Можете заново <a href="{% url 'login' %}">увійти</a> на сайт.
+      </p>
+    </div>
+  </div>
+{% endblock %}
