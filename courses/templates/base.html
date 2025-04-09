@@ -21,10 +21,14 @@
               <li class="nav-item">
                 <a class="nav-link active" href="#">
                   Головна
-                  <span class="visually-hidden">(current)</span>
                 </a>
               </li>
               {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link active" href="{% url 'manage_course_list' %}">
+                  Мої курси
+                </a>
+              </li>
               <li class="nav-item">
                 <form method="post" action="{% url 'logout' %}">
                   {% csrf_token %}

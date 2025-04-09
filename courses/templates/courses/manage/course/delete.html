@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Видалити курс
+{% endblock %}
+
+{% block content %}
+  <h2>Видалити курс "{{ object.title }}"?</h2>
+  <form method="post">
+    {% csrf_token %}
+    <p>Ви впевнені, що хочете видалити курс "{{ object.title }}"?</p>
+    <input type="submit" value="Так" />
+    <a href="{% url 'manage_course_list' %}" class="btn">Ні</a>
+  </form>
+{% endblock %}
