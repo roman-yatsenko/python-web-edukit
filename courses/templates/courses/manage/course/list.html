@@ -7,17 +7,19 @@
 {% block content %}
   <h2>Мої курси</h2>
   <div class="row">
+    <ul class="list-group mb-2">
     {% for course in object_list %}
-      <h3>{{ course.title }}</h3>
-      <p>
-        <a href="{% url 'course_edit' course.id %}">Змінити</a>
-        <a href="{% url 'course_delete' course.id %}">Видалити</a>
-      </p>
-    {% empty %}
-      <p>Відсутні створені курси</p>
-    {% endfor %}
-    <p>
-      <a href="{% url 'course_create' %}">Створити новий курс</a>
+      <li class="list-group-item">
+        <a href="{% url 'course_edit' course.id %}" class="text-decoration-none">📝</a>
+        <a href="{% url 'course_delete' course.id %}" class="text-decoration-none">❌</a>
+        <b>{{ course.title }}</b>
+      </li>
+      {% empty %}
+      <li>Відсутні створені курси</li>
+      {% endfor %}
+    </ul>
+    <p class="text-center">
+      <a class="btn btn-primary" href="{% url 'course_create' %}">Створити новий курс</a>
     </p>
   </div>
 {% endblock %}

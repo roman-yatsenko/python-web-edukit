@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
   {% if object %}
     Змінити курс "{{ object.title }}"
@@ -17,13 +19,16 @@
     {% endif %}
   </h2>
   <div class="row">
-    <h3>Інформація про курс</h3>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <p>
-        <input type="submit" value="Зберегти" />
-      </p>
-    </form>
+    <div class="col-6">
+      <h3>Інформація про курс</h3>
+      <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <p class="text-end">
+          <input type="submit" class="btn btn-primary" value="Зберегти" />
+          <a href="{% url 'manage_course_list' %}" class="btn btn-danger">Ні</a>
+        </p>
+      </form>
+    </div>
   </div>
 {% endblock %}

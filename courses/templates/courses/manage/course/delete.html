@@ -9,7 +9,7 @@
   <form method="post">
     {% csrf_token %}
     <p>Ви впевнені, що хочете видалити курс "{{ object.title }}"?</p>
-    <input type="submit" value="Так" />
-    <a href="{% url 'manage_course_list' %}" class="btn">Ні</a>
+    <input type="submit" class="btn btn-danger" value="Так" />
+    <a href="{% url 'manage_course_list' %}" class="btn btn-secondary">Ні</a>
   </form>
 {% endblock %}
