@@ -1,3 +1,6 @@
+from django.apps import apps
+from django.forms import modelformset_factory
+from django.forms.models import modelform_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.views.generic.base import TemplateResponseMixin, View
@@ -8,6 +11,7 @@ from courses.models import Course
 
 from .forms import ModuleFormSet
 from .mixins import OwnerCourseEditMixin, OwnerCourseMixin
+from .models import Content, Module
 
 # Create your views here.
 
@@ -61,4 +65,22 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
             'course': self.course,
             'formset': formset,
         })
+    
+
+class ContentCreateUpdateView(TemplateResponseMixin, View):
+    module = None
+    model = None
+    obj = None
+    template_name = 'courses/manage/content/form.html'
+
+    def get_model(self, model_name):
+        if model_name in ['text', 'file', 'video', 'image', 'url']:
+            return apps.get_model(app_label='courses', model_name=model_name)
+        return None
+    
+    def get_form(self, model, *args, **kwargs):
+        Form = modelformset_factory(model, exclude=[
+            'owner', 'order', 'created', 'updated'
+        ])
+        return Form(*args, **kwargs)
     
