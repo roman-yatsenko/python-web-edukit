@@ -11,7 +11,10 @@
     {% for course in object_list %}
       <li class="list-group-item">
         <a href="{% url 'course_edit' course.id %}" class="text-decoration-none">📝</a>
-        <a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">🗃️</a>
+        <a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑</a>
+        {% if course.modules.count > 0 %}
+          <a href="{% url 'module_content_list' course.modules.first.id %}">🗃️</a>
+        {% endif %}
         <a href="{% url 'course_delete' course.id %}" class="text-decoration-none">❌</a>
         <b>{{ course.title }}</b>
       </li>
