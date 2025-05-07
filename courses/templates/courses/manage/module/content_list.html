@@ -32,14 +32,16 @@
       <h3>Тема {{ module.order|add:1 }}. {{ module.title }}</h3>
       <hr>
       {% for content in module.contents.all %}
-        <div data-id="{{ content.id }}">
+        <div data-id="{{ content.id }}" class="border border-1 p-2 mb-1">
           {% with item=content.item %}
             <p>{{ item }} ({{ item|model_name|capfirst }})</p>
-            <a href="{% url 'module_content_update' module.id item|model_name item.id %}">📝</a>
-            <form action="{% url 'module_content_delete' content.id %}" method="post">
-              {% csrf_token %}
-              <input type="submit" value="❌">
-            </form>
+            <div class="d-flex gap-2">
+              <a href="{% url 'module_content_update' module.id item|model_name item.id %}" class="btn btn-outline-secondary">📝</a>
+              <form action="{% url 'module_content_delete' content.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="❌" class="btn btn-outline-danger">
+              </form>
+            </div>
           {% endwith %}
         </div>
       {% empty %}
