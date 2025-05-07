@@ -14,9 +14,9 @@
       <h3>
         <a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑</a> Теми 
       </h3>
-      <ul class="list-group">
+      <ul id="modules" class="list-group">
         {% for m in course.modules.all %}
-          <li class="list-group-item {% if m.id == module.id %}active{% endif %}" data-id="{{ m.id }}" >
+          <li class="list-group-item {% if m.id == module.id %}active{% endif %}" data-id="{{ m.id }}" draggable="true">
             <a href="{% url 'module_content_list' m.id %}" class="text-decoration-none {% if m.id == module.id %}text-white{% endif %}">
               <span>Тема {{m.order|add:1 }}</span><br>
               {{ m.title }}
@@ -61,3 +61,29 @@
   </div>
 {% endwith %}
 {% endblock content %}
+
+{% block include_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js" integrity="sha512-B/yiMlkxhtHzzJxPa5kNOO/+8cq0Fj4ndMUxVo2kGunCCH8g8XrPnzqg+sOon3hQ8RaEY2YytH+PIseTtfstjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock  %}
+
+{% block domready %}
+  var options = {
+    method: 'POST',
+    mode: 'same-origin'
+  }
+  const moduleOrderUrl = "{% url 'module_order' %}";
+
+  sortable('#modules', {
+    forcePlaceholderSize: true,
+    placeholderClass: 'placeholder'
+  })[0].addEventListener('sortupdate', function(e) {
+    modulesOrder = {};
+    var modules = document.querySelectorAll('#modules li');
+    modules.forEach(function(module, index) {
+      modulesOrder[module.dataset.id] = index;
+      module.querySelector('.order').innerHTML = index + 1;
+      options['body'] = JSON.stringify(modulesOrder);
+      fetch(moduleOrderUrl, options)
+    })
+  })
+{% endblock  %}
