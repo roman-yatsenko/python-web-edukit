@@ -8,14 +8,16 @@
 
 {% block content %}
 {% with course=module.course %}
-  <h2>Курс "{{ course.title }}"</h2>
+  <h2 class="mb-3">Курс "{{ course.title }}"</h2>
   <div class="row">
     <div class="col-3">
-      <h3>Теми</h3>
-      <ul>
+      <h3>
+        <a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑</a> Теми 
+      </h3>
+      <ul class="list-group">
         {% for m in course.modules.all %}
-          <li data-id="{{ m.id }}" {% if m == module %} class="selected" {% endif %}>
-            <a href="{% url 'module_content_list' m.id %}">
+          <li class="list-group-item {% if m.id == module.id %}active{% endif %}" data-id="{{ m.id }}" >
+            <a href="{% url 'module_content_list' m.id %}" class="text-decoration-none {% if m.id == module.id %}text-white{% endif %}">
               <span>Тема {{m.order|add:1 }}</span><br>
               {{ m.title }}
             </a>
@@ -24,7 +26,7 @@
           <li>Теми відсутні</li>
         {% endfor %}
       </ul>
-      <p><a href="{% url 'course_module_update' course.id %}">Змінити теми</a></p>
+      <p><a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑 Змінити теми</a></p>
     </div>
     <div class="col-9">
       <h3>Тема {{ module.order|add:1 }}. {{ module.title }}</h3>
@@ -45,16 +47,14 @@
           Контент відсутній.
         </p>
       {% endfor %}
-      <h4>Додати:</h4>
-      {% with content_types=["text", "image", "file", "url", "video"] %}
-        <ul>
-            {% for content in content_types %}
-                <li>
-                  <a href="{% url 'module_content_create' module.id content %}">{{ item|capfirst }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-      {% endwith %}
+      <h5>Додати:</h5>
+      <ul class="list-group list-group-horizontal">
+        {% for content in content_types %}
+            <li class="list-group-item">
+              <a href="{% url 'module_content_create' module.id content %}" class="text-decoration-none">{{ content|capfirst }}</a>
+            </li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endwith %}
