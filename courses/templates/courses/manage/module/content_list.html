@@ -18,7 +18,7 @@
         {% for m in course.modules.all %}
           <li class="list-group-item {% if m.id == module.id %}active{% endif %}" data-id="{{ m.id }}" draggable="true">
             <a href="{% url 'module_content_list' m.id %}" class="text-decoration-none {% if m.id == module.id %}text-white{% endif %}">
-              <span>Тема {{m.order|add:1 }}</span><br>
+              Тема <span class="order">{{m.order|add:1 }}</span><br>
               {{ m.title }}
             </a>
           </li>
@@ -28,11 +28,11 @@
       </ul>
       <p><a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑 Змінити теми</a></p>
     </div>
-    <div class="col-9">
+    <div id="module-contents" class="col-9">
       <h3>Тема {{ module.order|add:1 }}. {{ module.title }}</h3>
       <hr>
       {% for content in module.contents.all %}
-        <div data-id="{{ content.id }}" class="border border-1 p-2 mb-1">
+        <div data-id="{{ content.id }}" class="content border border-1 p-2 mb-1" draggable="true">
           {% with item=content.item %}
             <p>{{ item }} ({{ item|model_name|capfirst }})</p>
             <div class="d-flex gap-2">
@@ -84,6 +84,21 @@
       module.querySelector('.order').innerHTML = index + 1;
       options['body'] = JSON.stringify(modulesOrder);
       fetch(moduleOrderUrl, options)
-    })
-  })
+    });
+  });
+
+  const contentOrderUrl = "{% url 'content_order' %}";
+
+  sortable('#module-contents', {
+    forcePlaceholderSize: true,
+    placeholderClass: 'placeholder'
+  })[0].addEventListener('sortupdate', function(e) {
+    contentOrder = {};
+    var contents = document.querySelectorAll('#module-contents div.content');
+    contents.forEach(function(content, index) {
+      contentOrder[content.dataset.id] = index;
+      options['body'] = JSON.stringify(contentOrder);
+      fetch(contentOrderUrl, options)
+    });
+  });
 {% endblock  %}
