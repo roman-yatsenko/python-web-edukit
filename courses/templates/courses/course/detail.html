@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load course %}
+
 {% block title %}
   {{ object.title }}
 {% endblock %}
@@ -12,6 +14,6 @@
       | <span title="Кількість тем">📂 {{ object.modules.count }}</span>
       | <span title="Викладач">🧑‍🏫 {{ object.owner.get_full_name }}</span>
     </p>
-    <div>{{ object.overview|linebreaks }}</div>
+    <div>{{ object.overview|markdown }}</div>
   {% endwith %}
 {% endblock %}
