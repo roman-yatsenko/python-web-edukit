@@ -27,6 +27,7 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
     path('admin/', admin.site.urls),
     path('course/', include('courses.urls')),
+    path('students/', include('students.urls')),
     path('', CourseListView.as_view(), name='course_list')
 ]
 

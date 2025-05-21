@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Реєстрація
+{% endblock %}
+
+{% block content %}
+  <h2>Реєстрація</h2>
+  <div class="row">
+    <div class="col-4">
+      <p>Заповніть форму для створення акаунту:</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <p>
+          <input type="submit" class="btn btn-primary" value="Зареєструвати" />
+        </p>
+      </form>
+    </div>
+  </div>
+{% endblock %}
