@@ -15,5 +15,14 @@
       | <span title="Викладач">🧑‍🏫 {{ object.owner.get_full_name }}</span>
     </p>
     <div>{{ object.overview|markdown }}</div>
+    {% if request.user.is_authenticated %}
+      <form action="{% url 'student_enroll_course' %}" method="post">
+        {% csrf_token %}
+        {{ enroll_form }}
+        <input type="submit" class="btn btn-primary" value="Зарахуватися на курс">
+      </form>
+    {% else %}
+      <a href="{% url 'student_registration' %}" class="btn btn-primary">Зареєструватися для зарахування</a>
+    {% endif %}
   {% endwith %}
 {% endblock %}
