@@ -8,6 +8,8 @@ django = "*"
 pillow = "*"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
+django-braces = "*"
+markdown = "*"
 
 [dev-packages]
 

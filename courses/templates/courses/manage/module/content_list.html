@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% load course %}
+
+{% block title %}
+  Тема {{ module.order|add:1 }}: {{ module.title }}
+{% endblock %}
+
+{% block content %}
+{% with course=module.course %}
+  <h2 class="mb-3">Курс "{{ course.title }}"</h2>
+  <div class="row">
+    <div class="col-3">
+      <h3>
+        <a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑</a> Теми 
+      </h3>
+      <ul id="modules" class="list-group">
+        {% for m in course.modules.all %}
+          <li class="list-group-item {% if m.id == module.id %}active{% endif %}" data-id="{{ m.id }}" draggable="true">
+            <a href="{% url 'module_content_list' m.id %}" class="text-decoration-none {% if m.id == module.id %}text-white{% endif %}">
+              Тема <span class="order">{{m.order|add:1 }}</span><br>
+              {{ m.title }}
+            </a>
+          </li>
+        {% empty %}
+          <li>Теми відсутні</li>
+        {% endfor %}
+      </ul>
+      <p><a href="{% url 'course_module_update' course.id %}" class="text-decoration-none">📑 Змінити теми</a></p>
+    </div>
+    <div id="module-contents" class="col-9">
+      <h3>Тема {{ module.order|add:1 }}. {{ module.title }}</h3>
+      <hr>
+      {% for content in module.contents.all %}
+        <div data-id="{{ content.id }}" class="content border border-1 p-2 mb-1" draggable="true">
+          {% with item=content.item %}
+            <p>{{ item }} ({{ item|model_name|capfirst }})</p>
+            <div class="d-flex gap-2">
+              <a href="{% url 'module_content_update' module.id item|model_name item.id %}" class="btn btn-outline-secondary">📝</a>
+              <form action="{% url 'module_content_delete' content.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="❌" class="btn btn-outline-danger">
+              </form>
+            </div>
+          {% endwith %}
+        </div>
+      {% empty %}
+        <p>
+          Контент відсутній.
+        </p>
+      {% endfor %}
+      <h5>Додати:</h5>
+      <ul class="list-group list-group-horizontal">
+        {% for content in content_types %}
+            <li class="list-group-item">
+              <a href="{% url 'module_content_create' module.id content %}" class="text-decoration-none">{{ content|capfirst }}</a>
+            </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endwith %}
+{% endblock content %}
+
+{% block include_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js" integrity="sha512-B/yiMlkxhtHzzJxPa5kNOO/+8cq0Fj4ndMUxVo2kGunCCH8g8XrPnzqg+sOon3hQ8RaEY2YytH+PIseTtfstjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock  %}
+
+{% block domready %}
+  var options = {
+    method: 'POST',
+    mode: 'same-origin'
+  }
+  const moduleOrderUrl = "{% url 'module_order' %}";
+
+  sortable('#modules', {
+    forcePlaceholderSize: true,
+    placeholderClass: 'placeholder'
+  })[0].addEventListener('sortupdate', function(e) {
+    modulesOrder = {};
+    var modules = document.querySelectorAll('#modules li');
+    modules.forEach(function(module, index) {
+      modulesOrder[module.dataset.id] = index;
+      module.querySelector('.order').innerHTML = index + 1;
+      options['body'] = JSON.stringify(modulesOrder);
+      fetch(moduleOrderUrl, options)
+    });
+  });
+
+  const contentOrderUrl = "{% url 'content_order' %}";
+
+  sortable('#module-contents', {
+    forcePlaceholderSize: true,
+    placeholderClass: 'placeholder'
+  })[0].addEventListener('sortupdate', function(e) {
+    contentOrder = {};
+    var contents = document.querySelectorAll('#module-contents div.content');
+    contents.forEach(function(content, index) {
+      contentOrder[content.dataset.id] = index;
+      options['body'] = JSON.stringify(contentOrder);
+      fetch(contentOrderUrl, options)
+    });
+  });
+{% endblock  %}

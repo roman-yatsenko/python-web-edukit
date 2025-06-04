@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load course %}
+
+{% block title %}
+  {{ object.title }}
+{% endblock %}
+
+{% block content %}
+  {% with subject=object.subject %}
+    <h2>{{ object.title }}</h2>
+    <p>
+      <a href="{% url 'course_list_subject' subject.slug %}" class="text-decoration-none fw-light text-secondary" title="Напрям">🔀 {{ subject.title }}</a>
+      | <span title="Кількість тем">📂 {{ object.modules.count }}</span>
+      | <span title="Викладач">🧑‍🏫 {{ object.owner.get_full_name }}</span>
+    </p>
+    <div>{{ object.overview|markdown }}</div>
+    {% if request.user.is_authenticated %}
+      <form action="{% url 'student_enroll_course' %}" method="post">
+        {% csrf_token %}
+        {{ enroll_form }}
+        <input type="submit" class="btn btn-primary" value="Зарахуватися на курс">
+      </form>
+    {% else %}
+      <a href="{% url 'student_registration' %}" class="btn btn-primary">Зареєструватися для зарахування</a>
+    {% endif %}
+  {% endwith %}
+{% endblock %}
