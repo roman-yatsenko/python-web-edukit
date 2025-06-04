@@ -1,3 +1,5 @@
+{% load course %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,12 +22,16 @@
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
                 <a class="nav-link active" href="{% url 'course_list' %}">
-                  Головна
+                  Каталог курсів
                 </a>
               </li>
               {% if request.user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link active" href="{% url 'manage_course_list' %}">
+                {% if request.user|has_group:"Teachers" %}
+                  <a class="nav-link active" href="{% url 'manage_course_list' %}">
+                {% else %}
+                  <a class="nav-link active" href="{% url 'student_course_list' %}">
+                {% endif %}
                   Мої курси
                 </a>
               </li>
