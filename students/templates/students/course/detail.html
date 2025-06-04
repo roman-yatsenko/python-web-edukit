@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ object.title }}
+{% endblock %}
+
+{% block content %}
+  <h2 class="mb-3">Курс "{{ object.title }}"</h2>
+  <div class="row">
+    <div class="col-3">
+      <h3>Теми</h3>
+      <ul id="modules" class="list-group">
+        {% for m in object.modules.all %}
+          <li class="list-group-item {% if m == module %}active{% endif %}">
+            <a href="{% url 'student_course_detail_module' object.id m.id %}" class="text-decoration-none {% if m == module %}text-white{% endif %}">
+              Тема <span class="order">{{ m.order|add:1 }}</span><br />
+              {{ m.title }}
+            </a>
+          </li>
+        {% empty %}
+          <li>Теми відсутні</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div id="module-contents" class="col-9">
+      <h3>Тема {{ module.order|add:1 }}. {{ module.title }}</h3>
+      <hr />
+      {% for content in module.contents.all %}
+        <div class="content border border-1 p-2 mb-1">
+          {% with item=content.item %}
+            <h4>{{ item.title }}</h4>
+            {{ item.render }}
+          {% endwith %}
+        </div>
+      {% empty %}
+        <p>Контент відсутній.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

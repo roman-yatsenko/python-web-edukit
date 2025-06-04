@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Мої курси
+{% endblock %}
+
+{% block content %}
+  <h2>Мої курси</h2>
+  <div class="row">
+    {% for course in object_list %}
+      <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ course.title }}</h5>
+            <p class="card-text">Викладач: {{ course.owner.get_full_name }}</p>
+            <a href="{% url 'student_course_detail' course.id %}" class="btn btn-primary">Відкрити</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>
+        Ви ще не зараховані на жодний з курсів. Переглянути <a href="{% url 'course_list' %}" class="text-decoration-none">каталог курсів.</a>
+      </p>
+    {% endfor %}
+  </div>
+{% endblock %}
