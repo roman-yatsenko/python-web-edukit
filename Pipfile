@@ -11,6 +11,7 @@ crispy-bootstrap5 = "*"
 django-braces = "*"
 markdown = "*"
 django-embed-video = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
