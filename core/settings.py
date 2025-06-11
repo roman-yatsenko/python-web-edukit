@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'students',
     'crispy_forms',
     'crispy_bootstrap5',
+    'embed_video'
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
