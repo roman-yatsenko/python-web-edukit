@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Date: Wed, 18 Jun 2025 15:34:25 GMT
+Server: WSGIServer/0.2 CPython/3.12.6
+Content-Type: application/json
+Vary: Accept
+Allow: POST, OPTIONS
+X-Frame-Options: DENY
+Content-Length: 17
+X-Content-Type-Options: nosniff
+Referrer-Policy: same-origin
+Cross-Origin-Opener-Policy: same-origin
+
+{"enrolled":true}
